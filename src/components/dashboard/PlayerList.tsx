@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Player } from "../../lib/types";
 import api from "../../lib/api";
 import { Trophy, Star, Search, User, Loader2, AlertCircle, Flag } from "lucide-react";
+import Link from "next/link";
 
 // ── Position badge config ────────────────────────────────────────────────────
 const POSITION_BADGE: Record<Player["position"], { label: string; classes: string }> = {
@@ -31,6 +32,37 @@ function AvatarFallback({ name }: { name: string }) {
   return (
     <div className="w-full h-full flex items-center justify-center bg-slate-800">
       <span className="text-2xl font-black text-emerald-400">{initials}</span>
+    </div>
+  );
+}
+
+// ── Skeleton Loader ───────────────────────────────────────────────────────────
+function PlayerSkeleton() {
+  return (
+    <div className="flex flex-col items-center bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-md animate-pulse">
+      {/* Avatar skeleton */}
+      <div className="w-24 h-24 rounded-full bg-slate-800 mb-4 shrink-0" />
+      
+      {/* Badge skeleton */}
+      <div className="w-12 h-4 bg-slate-800 rounded-full mb-3" />
+      
+      {/* Name skeleton */}
+      <div className="w-3/4 h-5 bg-slate-800 rounded-md mb-2" />
+      
+      {/* Nationality skeleton */}
+      <div className="w-1/2 h-3 bg-slate-800 rounded-md mb-4" />
+      
+      {/* Divider */}
+      <div className="w-full border-t border-slate-800 my-4" />
+      
+      {/* Stats row skeleton */}
+      <div className="grid grid-cols-2 gap-3 w-full mb-4">
+        <div className="h-14 bg-slate-800 rounded-xl" />
+        <div className="h-14 bg-slate-800 rounded-xl" />
+      </div>
+      
+      {/* Button skeleton */}
+      <div className="w-full h-10 bg-slate-800 rounded-xl" />
     </div>
   );
 }
@@ -87,7 +119,7 @@ function PlayerCard({ player }: { player: Player }) {
       <div className="w-full border-t border-slate-800 my-4" />
 
       {/* Stats row */}
-      <div className="grid grid-cols-2 gap-3 w-full">
+      <div className="grid grid-cols-2 gap-3 w-full mb-4">
         <div className="flex flex-col items-center bg-slate-950/60 border border-slate-800 rounded-xl p-2.5">
           <Trophy className="h-4 w-4 text-amber-400 mb-1" />
           <span className="text-xs font-black text-slate-200">{player.goals}</span>
@@ -99,6 +131,11 @@ function PlayerCard({ player }: { player: Player }) {
           <span className="text-[9px] text-slate-500 uppercase tracking-wider font-semibold">Rating</span>
         </div>
       </div>
+
+      {/* Action Button */}
+      <Link href={`/players/${player._id}`} className="mt-auto w-full flex items-center justify-center bg-slate-800/60 hover:bg-emerald-500/10 text-slate-400 hover:text-emerald-400 border border-slate-700 hover:border-emerald-500/30 font-bold py-2.5 rounded-xl text-xs transition-all duration-200 group-hover:shadow-md group-hover:shadow-emerald-500/5">
+        View Details
+      </Link>
     </div>
   );
 }
@@ -160,9 +197,10 @@ export default function PlayerList() {
 
       {/* States */}
       {isLoading && (
-        <div className="flex flex-col items-center justify-center py-24">
-          <Loader2 className="h-8 w-8 text-emerald-500 animate-spin" />
-          <span className="text-sm text-slate-500 mt-3 font-medium">Loading squad roster...</span>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {Array.from({ length: 12 }).map((_, i) => (
+            <PlayerSkeleton key={i} />
+          ))}
         </div>
       )}
 
