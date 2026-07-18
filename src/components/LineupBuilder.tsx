@@ -337,9 +337,17 @@ export default function LineupBuilder({ players }: LineupBuilderProps) {
                     className="absolute z-10 flex flex-col items-center select-none"
                   >
                     {/* Circle Spot */}
-                    <button
+                    <div
+                      role="button"
+                      tabIndex={0}
                       onClick={() => setActiveSlotIndex(isSelected ? null : index)}
-                      className={`relative flex items-center justify-center w-12 h-12 rounded-full font-bold text-[10px] border shadow-lg transition-all ${
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          setActiveSlotIndex(isSelected ? null : index);
+                        }
+                      }}
+                      className={`relative flex items-center justify-center w-12 h-12 rounded-full font-bold text-[10px] border shadow-lg transition-all cursor-pointer ${
                         player
                           ? "bg-gradient-to-b from-zinc-800 to-zinc-900 border-emerald-500 text-emerald-400 scale-100 hover:scale-105 hover:border-emerald-400"
                           : "bg-emerald-950/30 hover:bg-emerald-900/40 border-emerald-500/30 text-emerald-500/60 border-dashed scale-95 hover:scale-100"
@@ -364,7 +372,7 @@ export default function LineupBuilder({ players }: LineupBuilderProps) {
                           ×
                         </button>
                       )}
-                    </button>
+                    </div>
 
                     {/* Label below Circle */}
                     <div className="mt-1 text-center w-28 pointer-events-none">
